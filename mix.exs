@@ -37,7 +37,7 @@ defmodule BrewEx.Mixfile do
     [
       {:nerves, "~> 0.3"},
       {:nerves_network_interface, "~> 0.3"},
-      {:onewire_therm, github: "tverlaan/onewire_therm"},
+      {:onewire_therm, github: "mokele/onewire_therm"},
       {:elixir_ale, "~> 0.5"}
     ]
   end
