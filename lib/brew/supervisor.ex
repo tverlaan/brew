@@ -1,4 +1,4 @@
-defmodule BrewEx.Supervisor do
+defmodule Brew.Supervisor do
   use Supervisor
 
   def start_link do
@@ -7,7 +7,7 @@ defmodule BrewEx.Supervisor do
 
   def init([]) do
     children = [
-      worker(BrewEx, [])
+      worker(Brew, [])
     ]
 
     supervise(children, strategy: :one_for_one)

@@ -1,6 +1,6 @@
-defmodule BrewExTest do
+defmodule BrewTest do
   use ExUnit.Case
-  doctest BrewEx
+  doctest Brew
 
   test "the truth" do
     assert 1 + 1 == 2

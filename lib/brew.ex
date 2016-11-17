@@ -1,4 +1,4 @@
-defmodule BrewEx do
+defmodule Brew do
   use GenServer
   require Logger
 

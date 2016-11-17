@@ -1,4 +1,4 @@
-# BrewEx
+# Brew
 
 Simple temperature control for fermentation. It's just a simple on/off system around a certain setpoint.
 

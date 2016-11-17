@@ -1,14 +1,14 @@
-defmodule BrewEx.Mixfile do
+defmodule Brew.Mixfile do
   use Mix.Project
 
   @target System.get_env("NERVES_TARGET") || "rpi2"
 
   def project do
-    [app: :brew_ex,
+    [app: :brew,
      version: "0.0.1",
      target: @target,
      elixir: "~> 1.2",
-     archives: [nerves_bootstrap: "0.1.2"],
+     archives: [nerves_bootstrap: "0.1.4"],
      deps_path: "deps/#{@target}",
      build_path: "_build/#{@target}",
      build_embedded: Mix.env == :prod,
@@ -29,7 +29,7 @@ defmodule BrewEx.Mixfile do
         :onewire_therm,
         :nerves_network_interface
       ],
-      mod: {BrewEx.Application, []}
+      mod: {Brew.Application, []}
     ]
   end
 
