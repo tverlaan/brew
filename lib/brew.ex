@@ -2,32 +2,40 @@ defmodule Brew do
   use GenServer
   require Logger
 
-  defstruct [:temperature, :min, :max, :fridge, :bulb]
+  @type t :: %__MODULE__{
+    temperature: float,
+    low: integer,
+    high: integer,
+    fridge: pid,
+    bulb: pid
+  }
+  defstruct [:temperature, :low, :high, :fridge, :bulb]
 
   @onewire 'w1'
   @address '28-0315a603beff'
 
-  @high 21
-  @low 20
-
-  @doc """
-  Start the worker
-  """
-  def start_link do
-    GenServer.start_link(__MODULE__, [], name: :brew)
-  end
+  ## API
 
   @doc """
   Read temperature from a specific sensor.
   """
+  @spec read_temperature(pid) :: float
   def read_temperature(server) do
     GenServer.call(server, :read_temperature)
   end
 
+  @doc """
+  Return state of fridge
+  """
+  @spec fridge?(pid) :: boolean
   def fridge?(server) do
     GenServer.call(server, :fridge)
   end
 
+  @doc """
+  Return state of the bulb (heating)
+  """
+  @spec bulb?(pid) :: boolean
   def bulb?(server) do
     GenServer.call(server, :bulb)
   end
@@ -35,13 +43,21 @@ defmodule Brew do
   ## GenServer callbacks
 
   @doc false
+  def start_link do
+    GenServer.start_link(__MODULE__, [], name: :brew)
+  end
+
+  @doc false
   def init([]) do
+
+    temperature = Application.get_env(:brew, :temperature)
+
     {:ok, _, _} = :onewire_therm_manager.subscribe(@onewire, @address)
 
     {:ok, fridge} = Gpio.start_link(17, :output)
     {:ok, bulb} = Gpio.start_link(18, :output)
 
-    {:ok, %__MODULE__{bulb: bulb, fridge: fridge}}
+    {:ok, %__MODULE__{bulb: bulb, fridge: fridge, low: temperature[:low], high: temperature[:high]}}
   end
 
   @doc false
@@ -66,7 +82,8 @@ defmodule Brew do
   end
 
   @doc false
-  def handle_info({:therm,{@onewire, @address},temp,_time}, system) do
+  def handle_info({:therm, {@onewire, @address}, temp, _time}, system) do
+    temp = Float.round(temp, 1)
     Logger.debug "Temp: #{inspect temp}"
 
     control(temp, system)
@@ -74,12 +91,12 @@ defmodule Brew do
     {:noreply, %__MODULE__{system | temperature: temp }}
   end
 
-  defp control(temp, system) when temp > @high do
+  defp control(temp, %__MODULE__{high: h} = system) when temp > h do
     system.bulb |> off
     system.fridge |> on
   end
 
-  defp control(temp, system) when temp < @low do
+  defp control(temp, %__MODULE__{low: l} = system) when temp < l do
     system.bulb |> on
     system.fridge |> off
   end
