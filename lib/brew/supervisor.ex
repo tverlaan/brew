@@ -6,8 +6,12 @@ defmodule Brew.Supervisor do
   end
 
   def init([]) do
+
+    if_wlan = Application.get_env(:brew, :wlan0) || []
+
     children = [
-      worker(Brew, [])
+      worker(Brew, []),
+      worker(Nerves.InterimWiFi, ["wlan0", if_wlan], function: :setup)
     ]
 
     supervise(children, strategy: :one_for_one)

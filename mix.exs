@@ -27,7 +27,8 @@ defmodule Brew.Mixfile do
         :nerves,
         :elixir_ale,
         :onewire_therm,
-        :nerves_network_interface
+        :nerves_interim_wifi,
+        :nerves_firmware_http
       ],
       mod: {Brew.Application, []}
     ]
@@ -36,9 +37,10 @@ defmodule Brew.Mixfile do
   defp deps do
     [
       {:nerves, "~> 0.3"},
-      {:nerves_network_interface, "~> 0.3"},
+      {:nerves_interim_wifi, "~> 0.1"},
       {:onewire_therm, github: "mokele/onewire_therm"},
-      {:elixir_ale, "~> 0.5"}
+      {:elixir_ale, "~> 0.5"},
+      {:nerves_firmware_http, github: "nerves-project/nerves_firmware_http"}
     ]
   end
 
