@@ -9,3 +9,6 @@
 
 # Generate on crash by the VM
 erl_crash.dump
+
+# secrets
+config/config.wifi.exs
