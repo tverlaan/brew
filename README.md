@@ -6,10 +6,10 @@ Simple temperature control for fermentation. It's just a simple on/off system ar
 
 ```
 
-BrewEx.read_temperature :brew
+Brew.read_temperature :brew
 
-BrewEx.bulb? :brew
-BrewEx.fridge? :brew
+Brew.bulb? :brew
+Brew.fridge? :brew
 
 ```
 
@@ -27,4 +27,4 @@ The diodes are used in series with the SSRs to hopefully prevent them from faili
 ## TODO
 
  - PID controller?
- - Networking!
+ - Web display?
