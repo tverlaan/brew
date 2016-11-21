@@ -17,14 +17,23 @@ defmodule Brew.Web do
 
   defp build_body() do
     temp = Brew.TemperatureControl.read :brew
+    fridge = Brew.TemperatureControl.fridge? :brew
+    bulb = Brew.TemperatureControl.bulb? :brew
+
+    operating_mode = case {fridge, bulb} do
+      {true, _} -> "Cooling is on!"
+      {_, true} -> "Heating is on!"
+      _ -> "Everything is fine..."
+    end
+
     """
     <html>
     <head>
       <title>Beer brewing temperature</title>
     </head>
     <body>
-      <h1>Current temp</h1>
-      <p>#{inspect temp} C</p>
+      <h1>Current temperature #{inspect temp} C</h1>
+      <p>#{operating_mode}</p>
     </body>
     </html>
     """
